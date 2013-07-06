@@ -3,17 +3,15 @@
 $(document).ready(function () {
     "use strict";
 
-    var uploadsRoot = window.campic.vars.imagepath,
-        lastImage = null;
+    var uploadsRoot = window.campic.vars.imagepath;
 
     function getLastImage(cb) {
         $.ajax({
             url: '/lastPic.json',
             dataType: 'json',
             success: function (resp) {
-                if (resp.file && resp.file !== lastImage) {
+                if (resp.file) {
                     cb(resp.file);
-                    lastImage = resp.file;
                 }
             }
         });
@@ -31,8 +29,26 @@ $(document).ready(function () {
         });
     }
 
+    function downloadImage(src, cb) {
+        var img = new Image(),
+            cont = $('#CamPic');
+        cont.addClass('loading');
+        img.onload = function () {
+            cont.removeClass('loading');
+            cb();
+        }
+        img.onerror = function () {
+            cont.removeClass('loading');
+            cb();
+        }
+        img.src = src;
+    }
+
     function setNewImage(file) {
-        $('#CamPic').attr('src', uploadsRoot + file);
+        var src = uploadsRoot + file;
+        downloadImage(src, function () {
+            $('#CamPic').attr('src', src);
+        });
     }
 
     function getImageListHTML(images) {
