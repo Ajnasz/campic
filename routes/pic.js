@@ -1,8 +1,20 @@
 /*jslint node: true, nomen: true*/
 
 var fs = require('fs'),
-    uploadDir = __dirname + '/../public/uploads/';
+    uploadDir = __dirname + '/../public/uploads/',
+    imgRex = /\.jpg$/;
 
+function getFileList(cb) {
+    fs.readdir(uploadDir, function (err, files) {
+        if (err) {
+            throw err;
+        }
+
+        cb(files.filter(function (f) {
+            return imgRex.test(f);
+        }).sort());
+    });
+}
 function addNewPic(pic, cb) {
     fs.readFile(pic, function (er, data) {
         if (er) {
@@ -20,11 +32,8 @@ function addNewPic(pic, cb) {
 }
 
 function getLastImagePath(cb) {
-    fs.readdir(uploadDir, function (err, files) {
-        if (err) {
-            throw err;
-        }
-        cb(files.sort().pop());
+    getFileList(function (files) {
+        cb(files.pop());
     });
 }
 
@@ -47,9 +56,13 @@ exports.lastPic = function (req, res) {
 };
 
 exports.addNewPic = function (req, res) {
-    console.log(req);
-
     addNewPic(req.files.file.path, function () {
-        sendJSONResponse(res, JSON.stringify({success: true}));
+        sendJSONResponse(res, {success: true});
+    });
+};
+
+exports.allPics = function (req, res) {
+    getFileList(function (files) {
+        sendJSONResponse(res, {files: files});
     });
 };

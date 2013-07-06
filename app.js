@@ -32,6 +32,7 @@ if ('development' === app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/lastPic.json', pic.lastPic);
+app.get('/allPics.json', pic.allPics);
 app.put('/pic', pic.addNewPic);
 
 http.createServer(app).listen(app.get('port'), function () {
