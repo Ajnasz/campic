@@ -15,9 +15,12 @@ var app = express();
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
-console.log(cons.underscore);
 app.engine('html', cons.underscore);
 app.set('view engine', 'html');
+
+// set environment
+app.set('imagepath', '/uploads/pic/');
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -30,10 +33,13 @@ if ('development' === app.get('env')) {
     app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/lastPic.json', pic.lastPic);
-app.get('/allPics.json', pic.allPics);
-app.put('/pic', pic.addNewPic);
+pic.setApp(app);
+routes.setApp(app);
+
+app.get('/', routes.execIndex);
+app.get('/lastPic.json', pic.execLastPic);
+app.get('/allPics.json', pic.execAllPics);
+app.put('/pic', pic.execAddNewPic);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

@@ -17,6 +17,10 @@
         </div>
         <div id="AvailableImages"></div>
     </div>
+    <script>
+        window.campic = {};
+        window.campic.vars = <%= JSON.stringify(exports) %>;
+    </script>
     <script src="http://code.jquery.com/jquery.js"></script>
     <script src="/javascripts/campic.js"></script>
 </body>

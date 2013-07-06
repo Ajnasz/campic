@@ -3,7 +3,7 @@
 $(document).ready(function () {
     "use strict";
 
-    var uploadsRoot = '/uploads/',
+    var uploadsRoot = window.campic.vars.imagepath,
         lastImage = null;
 
     function getLastImage(cb) {

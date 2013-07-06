@@ -1,7 +1,8 @@
 /*jslint node: true, nomen: true*/
 
 var fs = require('fs'),
-    uploadDir = __dirname + '/../public/uploads/',
+	app = null,
+    uploadDir = __dirname + '/../public/uploads/pic/',
     imgRex = /\.jpg$/;
 
 function getFileList(cb) {
@@ -49,20 +50,24 @@ function sendJSONResponse(res, content) {
     res.end(output);
 }
 
-exports.lastPic = function (req, res) {
+exports.execLastPic = function (req, res) {
     getLastImagePath(function (path) {
         sendJSONResponse(res, {file: path});
     });
 };
 
-exports.addNewPic = function (req, res) {
+exports.execAddNewPic = function (req, res) {
     addNewPic(req.files.file.path, function () {
         sendJSONResponse(res, {success: true});
     });
 };
 
-exports.allPics = function (req, res) {
+exports.execAllPics = function (req, res) {
     getFileList(function (files) {
         sendJSONResponse(res, {files: files});
     });
 };
+exports.setApp = function (application) {
+	app = application;
+    uploadDir = __dirname + '/../public' + app.get('imagepath');
+}
