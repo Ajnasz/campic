@@ -35,7 +35,7 @@ $(document).ready(function () {
         $('#CamPic').attr('src', uploadsRoot + file);
     }
 
-    function listImages(images) {
+    function getImageListHTML(images) {
         var o = '';
 
         images.forEach(function (f) {
@@ -45,9 +45,16 @@ $(document).ready(function () {
         return '<ul>' + o + '</ul>';
     }
 
+    function listImages() {
+        getImageList(function (images) {
+            $('#AvailableImages').html(getImageListHTML(images.reverse()));
+        });
+    }
+    
+
     $('#Refresh').on('click', function (e) {
         getLastImage(setNewImage);
-        getImageList();
+        listImages();
     });
 
     $('#AvailableImages').on('click', 'a', function (e) {
@@ -58,7 +65,5 @@ $(document).ready(function () {
     });
 
     getLastImage(setNewImage);
-    getImageList(function (images) {
-        $('#AvailableImages').html(listImages(images.reverse()));
-    });
+    listImages();
 });

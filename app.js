@@ -4,8 +4,8 @@
  */
 
 var express = require('express'),
-    routes = require('./routes'),
-    pic = require('./routes/pic'),
+    IndexRoute = require('./routes').IndexRoute,
+    PicRoute = require('./routes/pic').PicRoute,
     http = require('http'),
     path = require('path'),
     cons = require('consolidate');
@@ -33,13 +33,13 @@ if ('development' === app.get('env')) {
     app.use(express.errorHandler());
 }
 
-pic.setApp(app);
-routes.setApp(app);
+picRoute = new PicRoute(app);
+indexRoute = new IndexRoute(app);
 
-app.get('/', routes.execIndex);
-app.get('/lastPic.json', pic.execLastPic);
-app.get('/allPics.json', pic.execAllPics);
-app.put('/pic', pic.execAddNewPic);
+app.get('/', indexRoute.execIndex);
+app.get('/lastPic.json', picRoute.execLastPic);
+app.get('/allPics.json', picRoute.execAllPics);
+app.put('/pic', picRoute.execAddNewPic);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

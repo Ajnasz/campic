@@ -3,17 +3,14 @@
  * GET home page.
  */
 
-var app = null;
-
-exports.setApp = function (application) {
-	app = application;
-}
-
-exports.execIndex = function (req, res) {
-    res.render('index', {
-        title: 'RaspCam Pic',
-        exports: {
-            imagepath: app.get('imagepath')
-        }
-    });
-};
+exports.IndexRoute = require('./express_router').createRoute({
+	execIndex: function (req, res) {
+        app = this.app;
+	    res.render('index', {
+		title: 'RaspCam Pic',
+		exports: {
+		    imagepath: app.get('imagepath')
+		}
+	    });
+	}
+});

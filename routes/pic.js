@@ -1,7 +1,6 @@
 /*jslint node: true, nomen: true*/
 
 var fs = require('fs'),
-	app = null,
     uploadDir = __dirname + '/../public/uploads/pic/',
     imgRex = /\.jpg$/;
 
@@ -50,24 +49,27 @@ function sendJSONResponse(res, content) {
     res.end(output);
 }
 
-exports.execLastPic = function (req, res) {
-    getLastImagePath(function (path) {
-        sendJSONResponse(res, {file: path});
-    });
-};
+exports.PicRoute = require('./express_router').createRoute({
+    initialize: function () {
+        app = this.app;
+        uploadDir = __dirname + '/../public' + app.get('imagepath');
+    },
 
-exports.execAddNewPic = function (req, res) {
-    addNewPic(req.files.file.path, function () {
-        sendJSONResponse(res, {success: true});
-    });
-};
+    execLastPic: function (req, res) {
+        getLastImagePath(function (path) {
+            sendJSONResponse(res, {file: path});
+        });
+    },
 
-exports.execAllPics = function (req, res) {
-    getFileList(function (files) {
-        sendJSONResponse(res, {files: files});
-    });
-};
-exports.setApp = function (application) {
-	app = application;
-    uploadDir = __dirname + '/../public' + app.get('imagepath');
-}
+    execAddNewPic: function (req, res) {
+        addNewPic(req.files.file.path, function () {
+            sendJSONResponse(res, {success: true});
+        });
+    },
+
+    execAllPics: function (req, res) {
+        getFileList(function (files) {
+            sendJSONResponse(res, {files: files});
+        });
+    }
+});
