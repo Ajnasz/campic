@@ -6,16 +6,34 @@
     <title><%= title %></title>
     <style type="text/css">
         @import url('/stylesheets/bootstrap.min.css');
+        #AvailableImages {
+            max-height: 500px;
+            overflow: auto;
+        }
+        #CamPic {
+            margin-left: 0;
+            -moz-transition: 0.5s margin-left;
+            -webkit-transition: 0.5s margin-left;
+            transition: 0.5s margin-left;
+        }
+        #CamPic.loading {
+            margin-left: -800px;
+        }
+        #CamPicContainer {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>RaspCam Pic</h1>
-        <div class="hero-unit">
-            <button type="button" id="Refresh">Refresh</button>
-            <p><img src="about:blank" alt="campic" id="CamPic" width="100%" /></p>
+        <div class="row">
+            <div class="span8">
+                <p id="CamPicContainer"><img src="about:blank" alt="campic" id="CamPic" width="100%" /></p>
+                <button type="button" id="Refresh" class="btn">Refresh</button>
+            </div>
+            <div id="AvailableImages" class="span4"></div>
         </div>
-        <div id="AvailableImages"></div>
     </div>
     <script>
         window.campic = {};
