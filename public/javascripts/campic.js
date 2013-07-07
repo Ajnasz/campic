@@ -3,7 +3,8 @@
 $(document).ready(function () {
     "use strict";
 
-    var uploadsRoot = window.campic.vars.imagepath;
+    var uploadsRoot = window.campic.vars.imagepath,
+        refreshing = false;
 
     function getLastImage(cb) {
         $.ajax({
@@ -44,10 +45,17 @@ $(document).ready(function () {
         img.src = src;
     }
 
+    function setActiveInList(file) {
+            $('#AvailableImages')
+                .find('a').removeClass('active')
+                    .filter('[data-img="' + file + '"]').addClass('active');
+    }
+
     function setNewImage(file) {
         var src = uploadsRoot + file;
         downloadImage(src, function () {
             $('#CamPic').attr('src', src);
+            setActiveInList(file);
         });
     }
 
@@ -67,11 +75,22 @@ $(document).ready(function () {
         });
     }
     
+    function refresh() {
 
-    $('#Refresh').on('click', function (e) {
-        getLastImage(setNewImage);
-        listImages();
-    });
+        if (refreshing) {
+            return;
+        }
+
+        refreshing = true;
+
+        getLastImage(function (file) {
+            listImages();
+            setNewImage(file);
+            refreshing = false;
+        });
+    }
+
+    $('#Refresh').on('click', refresh);
 
     $('#AvailableImages').on('click', 'a', function (e) {
         e.preventDefault();
@@ -80,6 +99,10 @@ $(document).ready(function () {
         setNewImage(target.data('img'));
     });
 
-    getLastImage(setNewImage);
-    listImages();
+    var socket = io.connect('http://' + window.location.host);
+    socket.on('imagechange', function (data) {
+        refresh();
+    });
+    refresh();
+   });
 });

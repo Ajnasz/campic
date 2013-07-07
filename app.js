@@ -14,6 +14,8 @@ var express = require('express'),
 
 function startServer(conf) {
     var app = express();
+    var server = http.createServer(app),
+        io = require('socket.io').listen(server);
 
     // all environments
     app.set('port', conf.server && conf.server.port || 3000);
@@ -45,10 +47,12 @@ function startServer(conf) {
     app.get('/allPics.json', picRoute.execAllPics);
     app.put('/pic', picRoute.execAddNewPic);
 
-    var server = http.createServer(app);
+
     server.listen(app.get('port'), function () {
+        var socket = new require('./socket').Socket(io, app);
         console.log('Express server listening on port ' + app.get('port'));
     });
+
 }
 
 var parser = new IniReader();
