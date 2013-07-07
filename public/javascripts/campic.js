@@ -130,6 +130,10 @@ $(document).ready(function () {
     $(document).keydown(function (event) {
         var action = null;
 
+        if (event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
+            return;
+        }
+
         switch (event.which) {
         case 74: // j
             action = 'next';
