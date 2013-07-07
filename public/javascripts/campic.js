@@ -104,5 +104,48 @@ $(document).ready(function () {
         refresh();
     });
     refresh();
-   });
+
+    function getActiveLink() {
+        return $('#AvailableImages').find('.active');
+    }
+
+    function getNextLink() {
+        var current = getActiveLink();
+        return current.parent().next().find('a');
+    }
+
+    function getPrevioiusLink() {
+        var current = getActiveLink();
+        return current.parent().prev().find('a');
+    }
+
+    function switchToNextImage() {
+        getNextLink().click();
+    }
+    function switchToPreviousImage() {
+        getPrevioiusLink().click();
+    }
+
+    $(document).keydown(function (event) {
+        var action = null;
+
+        switch (event.which) {
+        case 74: // j
+            action = 'next';
+            break;
+        case 75: // k
+            action = 'previous';
+            break;
+        }
+
+        if (action) {
+            event.preventDefault();
+
+            if (action === 'next') {
+                switchToNextImage();
+            } else if (action === 'previous') {
+                switchToPreviousImage();
+            }
+        }
+    });
 });
