@@ -1,2 +1,5 @@
 node_modules
 public/uploads/*.jpg
+conf.ini
+public/uploads/pic
+
